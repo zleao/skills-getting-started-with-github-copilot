@@ -4,6 +4,37 @@ document.addEventListener("DOMContentLoaded", () => {
   const signupForm = document.getElementById("signup-form");
   const messageDiv = document.getElementById("message");
 
+  function renderParticipantsSection(activityCard, participants) {
+    const participantsSection = document.createElement("div");
+    participantsSection.className = "participants";
+
+    const title = document.createElement("p");
+    title.className = "participants-title";
+    title.textContent = "Participants:";
+    participantsSection.appendChild(title);
+
+    if (!Array.isArray(participants) || participants.length === 0) {
+      const emptyState = document.createElement("p");
+      emptyState.className = "participants-empty";
+      emptyState.textContent = "No participants yet";
+      participantsSection.appendChild(emptyState);
+      activityCard.appendChild(participantsSection);
+      return;
+    }
+
+    const list = document.createElement("ul");
+    list.className = "participants-list";
+
+    participants.forEach((email) => {
+      const item = document.createElement("li");
+      item.textContent = email;
+      list.appendChild(item);
+    });
+
+    participantsSection.appendChild(list);
+    activityCard.appendChild(participantsSection);
+  }
+
   // Function to fetch activities from API
   async function fetchActivities() {
     try {
@@ -26,6 +57,8 @@ document.addEventListener("DOMContentLoaded", () => {
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
         `;
+
+        renderParticipantsSection(activityCard, details.participants);
 
         activitiesList.appendChild(activityCard);
 
